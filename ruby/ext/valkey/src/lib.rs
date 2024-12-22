@@ -59,6 +59,7 @@ impl ValkeyClient {
 fn convert(value: redis::Value) -> String {
     match value {
         redis::Value::BulkString(v) => String::from_utf8_lossy(&v).to_string(),
+        redis::Value::Okay => "OK".to_string(),
         _ => todo!()
     }
 }
