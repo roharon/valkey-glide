@@ -18,20 +18,10 @@ class Valkey
     end
 
      def get(key)
-         # request = CommandRequest::CommandRequest.new(
-         #     callback_idx: 1,
-         #     single_command: CommandRequest::Command.new(
-         #         request_type: CommandRequest::RequestType::Get,
-         #         args_array: CommandRequest::Command::ArgsArray.new(args: [key.b])
-         #    )
-         # )
-
          request = CommandRequest::Command.new(
                  request_type: CommandRequest::RequestType::Get,
                  args_array: CommandRequest::Command::ArgsArray.new(args: [key.b])
          )
-
-         pp request
 
          @client.send_command(CommandRequest::Command.encode(request))
      end

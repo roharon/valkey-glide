@@ -45,8 +45,6 @@ impl ValkeyClient {
 
         let mut client = rb_self.client.clone();
 
-        dbg!(&request_bytes);
-
         let request = command_request::Command::parse_from_bytes(request_bytes).expect("felan");
 
         let cmd = get_redis_command(&request).unwrap();

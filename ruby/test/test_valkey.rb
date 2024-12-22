@@ -14,6 +14,8 @@ class TestValkey < Minitest::Test
   def test_felan
       client = Valkey.new
 
+      # assert_equal client.set("foo"), "bar"
+
       assert_equal client.get("foo"), "bar"
   end
 end
