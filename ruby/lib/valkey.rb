@@ -17,14 +17,6 @@ class Valkey
       @client = Client.new(ConnectionRequest::ConnectionRequest.encode(request))
     end
 
-     def get(key)
-         request = CommandRequest::Command.new(
-                 request_type: CommandRequest::RequestType::Get,
-                 args_array: CommandRequest::Command::ArgsArray.new(args: [key.b])
-         )
-
-         @client.send_command(CommandRequest::Command.encode(request))
-     end
 
      def set(key, value)
          request = CommandRequest::Command.new(
@@ -33,5 +25,18 @@ class Valkey
          )
 
          @client.send_command(CommandRequest::Command.encode(request))
+     end
+
+     def get_v1(key)
+         request = CommandRequest::Command.new(
+                 request_type: CommandRequest::RequestType::Get,
+                 args_array: CommandRequest::Command::ArgsArray.new(args: [key.b])
+         )
+
+         @client.send_command(CommandRequest::Command.encode(request))
+     end
+
+     def get_v2(key)
+         @client.get_v2(key)
      end
 end

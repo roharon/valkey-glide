@@ -6,8 +6,8 @@ $LOAD_PATH.unshift(File.expand_path("../hiredis-client/lib", __dir__))
 $LOAD_PATH.unshift(File.expand_path("../test/support", __dir__))
 
 require "redis"
-require "redis-client"
-require "hiredis-client"
+# require "redis-client"
+# require "hiredis-client"
 # require "servers"
 require "benchmark/ips"
 require_relative '../../ruby/lib/valkey.rb'

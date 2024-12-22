@@ -11,11 +11,19 @@ class TestValkey < Minitest::Test
     assert true
   end
 
-  def test_felan
+  def test_get_v1
       client = Valkey.new
 
-      pp client.set("foo", "bar")
+      client.set("foo", "bar")
 
-      assert_equal client.get("foo"), "bar"
+      assert_equal client.get_v1("foo"), "bar"
+  end
+
+  def test_get_v2
+      client = Valkey.new
+
+      client.set("foo", "bar")
+
+      assert_equal client.get_v2("foo"), "bar"
   end
 end

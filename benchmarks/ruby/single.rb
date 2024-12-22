@@ -19,7 +19,7 @@ redis_client.call("HMSET", "hash", *8.times.to_a)
 redis_client.call("HMSET", "large-hash", *1000.times.to_a)
 
 benchmark("small string") do |x|
-  x.report("valkey") { valkey.get("key") }
+  x.report("valkey-v1") { valkey.get_v1("key") }
+  x.report("valkey-v2") { valkey.get_v2("key") }
   x.report("redis-rb") { redis.get("key") }
-  x.report("redis-client") { redis_client.call("GET", "key") }
 end

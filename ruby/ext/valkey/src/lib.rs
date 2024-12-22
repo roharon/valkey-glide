@@ -55,7 +55,21 @@ impl ValkeyClient {
 
         return convert(result);
     }
+
+    fn get_v2(rb_self: &Self, key: String) -> String {
+        let mut client = rb_self.client.clone();
+
+        let mut cmd = redis::cmd("GET");
+        cmd.arg(key);
+
+        let result = rb_self.runtime.block_on(async {
+            client.send_command(&cmd, None).await.unwrap()
+        });
+
+        return convert(result);
+    }
 }
+
 fn convert(value: redis::Value) -> String {
     match value {
         redis::Value::BulkString(v) => String::from_utf8_lossy(&v).to_string(),
@@ -98,6 +112,7 @@ fn init(ruby: &Ruby) -> Result<(), Error> {
     class.define_singleton_method("new", function!(ValkeyClient::new, 1))?;
 
     class.define_method("send_command", method!(ValkeyClient::send_command, 1))?;
+    class.define_method("get_v2", method!(ValkeyClient::get_v2, 1))?;
 
     Ok(())
 }
