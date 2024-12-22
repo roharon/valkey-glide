@@ -12,6 +12,7 @@ impl Valkey {
     fn test(&self) -> isize {
         2
     }
+
 }
 
 #[magnus::init]
