@@ -10,4 +10,9 @@ class TestValkey < Minitest::Test
   def test_it_does_something_useful
     assert true
   end
+
+  def test_felan
+      client = Valkey.new
+      client.test
+  end
 end
