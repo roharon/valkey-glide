@@ -2,18 +2,12 @@
 # frozen_string_literal: true
 
 $LOAD_PATH.unshift(File.expand_path("../lib", __dir__))
-$LOAD_PATH.unshift(File.expand_path("../hiredis-client/lib", __dir__))
 $LOAD_PATH.unshift(File.expand_path("../test/support", __dir__))
 
 require "redis"
-# require "redis-client"
-# require "hiredis-client"
-# require "servers"
+require "redis-client"
 require "benchmark/ips"
 require_relative '../../ruby/lib/valkey.rb'
-
-# Servers::BENCHMARK.prepare
-# at_exit { Servers::BENCHMARK.shutdown }
 
 class RedisBenchmark
   def initialize(x)

@@ -12,14 +12,10 @@ valkey = Valkey.new
 
 
 redis_client.call("SET", "key", "value")
-redis_client.call("SET", "large", "value" * 10_000)
-redis_client.call("LPUSH", "list", *5.times.to_a)
-redis_client.call("LPUSH", "large-list", *1000.times.to_a)
-redis_client.call("HMSET", "hash", *8.times.to_a)
-redis_client.call("HMSET", "large-hash", *1000.times.to_a)
 
-benchmark("small string") do |x|
+benchmark("GET key") do |x|
   x.report("valkey-v1") { valkey.get_v1("key") }
   x.report("valkey-v2") { valkey.get_v2("key") }
-  x.report("redis-rb") { redis.get("key") }
+  x.report("redis") { redis.get("key") }
+  x.report("redis-client") { redis_client.call("GET", "key") }
 end
