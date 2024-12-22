@@ -3,5 +3,5 @@
 require_relative "valkey/version"
 require_relative "valkey/valkey"
 
-module Valkey
+class Valkey
 end

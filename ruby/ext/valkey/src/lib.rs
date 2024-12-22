@@ -1,12 +1,11 @@
 use magnus::{function, prelude::*, Error, Ruby};
 
-fn hello(subject: String) -> String {
-    format!("Hello from Rust, {subject}!")
+#[magnus::wrap(class = "Valkey")]
+struct Valkey {
 }
 
 #[magnus::init]
 fn init(ruby: &Ruby) -> Result<(), Error> {
-    let module = ruby.define_module("Valkey")?;
-    module.define_singleton_method("hello", function!(hello, 1))?;
+    let class = ruby.define_class("Valkey", ruby.class_object())?;
     Ok(())
 }
