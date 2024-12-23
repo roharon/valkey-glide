@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Valkey
-    class Client
-    end
+  class Client
+  end
 end
-
