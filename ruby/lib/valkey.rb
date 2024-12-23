@@ -7,6 +7,9 @@ require_relative "valkey/protobuf/command_request_pb"
 require_relative "valkey/protobuf/connection_request_pb"
 require_relative "valkey/protobuf/response_pb"
 
+#
+# Valkey Client
+#
 class Valkey
   def initialize
     request = ConnectionRequest::ConnectionRequest.new(
