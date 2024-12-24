@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "valkey/commands/strings"
+require_relative "commands/strings"
 
 class Valkey
   module Commands

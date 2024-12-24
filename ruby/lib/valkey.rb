@@ -5,7 +5,7 @@ require_relative "valkey/valkey"
 require_relative "valkey/protobuf/command_request_pb"
 require_relative "valkey/protobuf/connection_request_pb"
 require_relative "valkey/protobuf/response_pb"
-require "valkey/commands"
+require_relative "valkey/commands"
 
 #
 # Valkey Client
