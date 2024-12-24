@@ -2,10 +2,6 @@
 
 require_relative "setup"
 
-driver = ENV.fetch("DRIVER", "ruby").to_sym
-# redis_client = RedisClient.new(host: "localhost", port: Servers::REDIS.real_port, driver: driver)
-# redis = Redis.new(host: "localhost", port: Servers::REDIS.real_port, driver: driver)
-
 redis_client = RedisClient.new
 redis = Redis.new
 valkey = Valkey.new
