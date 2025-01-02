@@ -14,7 +14,7 @@ class TestValkey < Minitest::Test
   def test_get_v1
     client = Valkey.new
 
-    client.set("foo", "bar")
+    client.set_v1("foo", "bar")
 
     assert_equal client.get_v1("foo"), "bar"
   end
@@ -22,8 +22,24 @@ class TestValkey < Minitest::Test
   def test_get_v2
     client = Valkey.new
 
-    client.set("foo", "bar")
+    client.set_v1("foo", "bar")
 
     assert_equal client.get_v2("foo"), "bar"
+  end
+
+  def test_set_v1
+    client = Valkey.new
+
+    client.set_v1("foo", "bar")
+
+    assert_equal client.get_v1("foo"), "bar"
+  end
+
+  def test_set_v2
+    client = Valkey.new
+
+    client.set_v2("foo", "bar")
+
+    assert_equal client.get_v1("foo"), "bar"
   end
 end
