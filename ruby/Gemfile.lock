@@ -3,13 +3,16 @@ PATH
   specs:
     valkey (0.1.0)
       google-protobuf (~> 4.29.2)
-      rb_sys (~> 0.9.91)
+      rb_sys (~> 0.9.105)
 
 GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.2)
     bigdecimal (3.1.8)
+    google-protobuf (4.29.2)
+      bigdecimal
+      rake (>= 13)
     google-protobuf (4.29.2-x86_64-linux)
       bigdecimal
       rake (>= 13)
@@ -25,7 +28,7 @@ GEM
     rake (13.2.1)
     rake-compiler (1.2.8)
       rake
-    rb_sys (0.9.104)
+    rb_sys (0.9.105)
     regexp_parser (2.9.3)
     rubocop (1.69.2)
       json (~> 2.3)
