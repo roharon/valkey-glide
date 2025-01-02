@@ -68,6 +68,19 @@ impl ValkeyClient {
 
         return convert(result);
     }
+
+    fn set_v2(rb_self: &Self, key: String, value: String) -> String {
+        let mut client = rb_self.client.clone();
+
+        let mut cmd = redis::cmd("SET");
+        cmd.arg(key).arg(value);
+
+        let result = rb_self.runtime.block_on(async {
+            client.send_command(&cmd, None).await.unwrap()
+        });
+
+        return convert(result);
+    }
 }
 
 fn convert(value: redis::Value) -> String {
@@ -113,6 +126,7 @@ fn init(ruby: &Ruby) -> Result<(), Error> {
 
     class.define_method("send_command", method!(ValkeyClient::send_command, 1))?;
     class.define_method("get_v2", method!(ValkeyClient::get_v2, 1))?;
+    class.define_method("set_v2", method!(ValkeyClient::set_v2, 2))?;
 
     Ok(())
 }

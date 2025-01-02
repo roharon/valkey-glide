@@ -32,13 +32,18 @@ class Valkey
     end
 
     # Set the string value of a key.
-    def set(key, value)
+    def set_v1(key, value)
       request = CommandRequest::Command.new(
         request_type: CommandRequest::RequestType::Set,
         args_array: CommandRequest::Command::ArgsArray.new(args: [key, value])
       )
 
       @client.send_command(CommandRequest::Command.encode(request))
+    end
+
+    # Set the string value of a key.
+    def set_v2(key, value)
+      @client.set_v2(key, value)
     end
   end
 end
