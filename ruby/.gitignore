@@ -1,0 +1,13 @@
+# IDE generaged files
+.vs
+.vscode
+.idea
+
+# mkmf
+mkmf.log
+Makefile
+
+# ruby rust compiled files
+/tmp
+/target
+*.bundle
