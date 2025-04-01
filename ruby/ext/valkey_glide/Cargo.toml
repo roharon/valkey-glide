@@ -1,15 +1,22 @@
 [package]
 name = "valkey_glide"
-version = "255.255.255"
+version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0"
 authors = ["Valkey GLIDE Maintainers"]
 
 [lib]
-name = "glide"
+name = "valkey_glide"
 crate-type = ["cdylib"]
 
 [dependencies]
-magnus = { version = "0.7.1" }
-bytes = { version = "^1.10" }
-glide-core = { path = "../../../glide-core", features = ["socket-layer"] }
+magnus = "0.7.1"
+protobuf = { version = "3", features = [] }
+glide-ffi = { path = "../../../ffi", features = [] }
+#redis = { path = "../../../glide-core/redis-rs/redis", features = ["aio", "tokio-comp", "tokio-rustls-comp"] }
+#glide-core = { path = "../../../glide-core/", features = ["proto"] }
+#tokio = { version = "^1", features = ["rt", "macros", "rt-multi-thread", "time"] }
+
+[profile.release]
+lto = true
+debug = true
