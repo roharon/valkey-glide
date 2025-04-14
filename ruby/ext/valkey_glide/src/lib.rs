@@ -1,9 +1,10 @@
-use magnus::{function, method, prelude::*, Error, Module, Object, RArray, RHash, RString, Ruby, value::Value, value::qnil, value, IntoValue};
+use magnus::{function, method, prelude::*, Error, Module, Object, RArray, RHash, RString, Ruby, value::Value, value::qnil, value, IntoValue, TypedData, class, DataTypeFunctions};
 
 use glide_ffi::{
-    RequestType, close_client, command, create_client, free_command_result,
+    RequestType, close_client, command, create_client, free_command_result, ClientAdapter, create_client_internal,
     free_connection_response, ClientType, CommandResponse, ConnectionResponse, ResponseType
 };
+use glide_core::request_type::RequestType;
 use std::ffi::CStr;
 use std::os::raw::{c_ulong, c_void};
 use std::ptr;
@@ -12,14 +13,15 @@ use std::ptr;
 const REQUEST_TYPE_NORMAL: i32 = 1;
 
 // Client wrapper for Valkey GLIDE
+#[magnus::wrap(class = "ValkeyGlide::Client", free_immediately, size)]
 struct ValkeyGlideClient {
-    client_ptr: *const c_void,
+    adapter: ClientAdapter,
 }
 
+
 impl ValkeyGlideClient {
-    unsafe fn new(connection_request: RHash, client_type_str: String) -> Result<Self, Error> {
+    fn new(connection_request: RHash, client_type_str: String) -> Result<Value, Error> {
         // Serialize connection_request to bytes
-        // let ruby = unsafe { Ruby::get() };
         let connection_request_bytes = match connection_request.to_s() {
             Ok(s) => s.as_bytes().to_vec(),
             Err(e) => return Err(Error::new(
@@ -77,14 +79,28 @@ impl ValkeyGlideClient {
             ));
         }
 
-        // Success
-        Ok(ValkeyGlideClient {
-            client_ptr: response.conn_ptr,
-        })
+        // Create the client wrapper
+        let client = ConnectionResponse {
+            conn_ptr: response.conn_ptr,
+            connection_error_message: response.connection_error_message,
+        };
+
+        // Wrap the client in a Ruby object
+        unsafe { free_connection_response(connection_response as *mut ConnectionResponse) };
+
+        // Return the TypedData object
+        Ok(data.as_value())
     }
 
-    fn command(&self, requestType: RequestType, command_args: RArray) -> Result<Value, Error> {
-        let ruby = unsafe { Ruby::get() };
+    fn command(&self, request_type_int: i32, command_args: RArray) -> Result<Value, Error> {
+        // Convert request_type_int to RequestType
+        let request_type = match request_type_int {
+            REQUEST_TYPE_NORMAL => RequestType::Normal,aa
+            _ => return Err(Error::new(
+                magnus::exception::arg_error(),
+                format!("Invalid request type: {}", request_type_int),
+            )),
+        };
 
         // Convert Ruby array to Vec<String>
         let mut args: Vec<String> = Vec::with_capacity(command_args.len());
@@ -113,7 +129,7 @@ impl ValkeyGlideClient {
             command(
                 self.client_ptr,
                 0,  // channel (not used for sync)
-                requestType,
+                request_type,
                 args.len() as c_ulong,
                 arg_ptrs.as_ptr(),
                 arg_lens.as_ptr(),
@@ -270,17 +286,6 @@ impl ValkeyGlideClient {
     }
 }
 
-impl Drop for ValkeyGlideClient {
-    fn drop(&mut self) {
-        if !self.client_ptr.is_null() {
-            unsafe {
-                close_client(self.client_ptr);
-            }
-            self.client_ptr = ptr::null();
-        }
-    }
-}
-
 // Register the ValkeyGlide module and Client class
 #[magnus::init]
 fn init(ruby: &Ruby) -> Result<(), Error> {
@@ -290,9 +295,12 @@ fn init(ruby: &Ruby) -> Result<(), Error> {
     // Define Client class
     let client_class = module.define_class("Client", ruby.class_object())?;
 
+    // Define constants
+    module.const_set("REQUEST_TYPE_NORMAL", REQUEST_TYPE_NORMAL)?;
+
     // Define methods
-    client_class.define_singleton_method("new", function!(ValkeyGlideClient::new, 2))?;
-    client_class.define_method("command", function!(ValkeyGlideClient::command, 2))?;
+    // client_class.define_method("initialize", method!(ValkeyGlideClient::new, 2))?;
+    // client_class.define_method("command", method!(ValkeyGlideClient::command, 2))?;
 
     Ok(())
 }
